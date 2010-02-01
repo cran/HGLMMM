@@ -1,0 +1,9 @@
+import("Matrix")# including update()
+
+import("lattice")
+
+export("HGLMfit","HGLMLRTest","HGLMLikeDeriv","BootstrapEnvelopeHGLM")
+
+S3method(summary,HGLM)
+S3method(print,HGLM)
+S3method(print,summary.HGLM)
