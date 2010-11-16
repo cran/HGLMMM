@@ -11,9 +11,13 @@ This function fits generalized linear models with random effects using h-likelih
 }
 
 \usage{
-HGLMfit(DistResp = "Normal", DistRand = NULL, Link = NULL, LapFix = FALSE, ODEst = NULL, ODEstVal = 0, 
-	formulaMain, formulaOD, formulaRand, DataMain, DataRand, Offset = NULL, BinomialDen = NULL, StartBeta = NULL, 
-	StartVs = NULL, StartRGamma = NULL, INFO = TRUE, DEBUG = FALSE, na.action, contrasts = NULL, CONV = 1e-04)
+HGLMfit(DistResp = "Normal", DistRand = NULL, Link = NULL, 
+            LapFix = FALSE, ODEst = NULL, ODEstVal = 0, 
+	        formulaMain, formulaOD, formulaRand, DataMain, 
+            DataRand, Offset = NULL, BinomialDen = NULL, 
+            StartBeta = NULL, StartVs = NULL, StartRGamma = NULL, 
+            INFO = TRUE, DEBUG = FALSE, na.action, contrasts = NULL, 
+            CONV = 1e-04)
 }
 
 \arguments{
@@ -26,11 +30,13 @@ HGLMfit(DistResp = "Normal", DistRand = NULL, Link = NULL, LapFix = FALSE, ODEst
  	marginal likelihood (TRUE).}
   \item{ODEst}{Specify whether overdispersion (residual dispersion) parameters are fixed (FALSE) or estimated (TRUE).}
   \item{ODEstVal}{Provide (starting) values for the overdispersion structure - vector of length equal to the number of parameters in the overdispersion structure.}
-  \item{formulaMain}{Specify the formula for the mean structure of the model: \code{ Response ~ Fixed.Effect.1+ ... +Fixed.Effect.N+(Random.Effect.1|Subject.1)+ ... +(Random.Effect.N|Subject.N).}}
+  \item{formulaMain}{Specify the formula for the mean structure of the model: \code{ Response} \code{~ Fixed.Effect.1+ ... +Fixed.Effect.N}
+                    \code{+(Random.Effect.1|Subject.1)+ ... +(Random.Effect.N|Subject.N).}}
   \item{formulaOD}{Specify the formula for the overdispersion (residual dispersion) structure: \code{~ Effect.1+ ... +Effect.N.}}
-  \item{formulaRand}{Specify the list of formulas for dispersion strucutre of each random effects: \code{list(one=~Effect.1.1+...,two=~Effect.2.1+ ...,three=...,...).}}
+  \item{formulaRand}{Specify the list of formulas for dispersion strucutre of each random effects:
+            \code{list(one=~Effect.1.1+...,two=~Effect.2.1+ ...,three=...,...).}}
   \item{DataMain}{Specify dataframe for \code{formulaMain} and \code{formulaOD}.}
-  \item{DataRand}{Specify a list of dataframes for \code{formulaRand}: \code{list(one=data.R.1,two=data.R.2,...).}}
+  \item{DataRand}{List of dataframes for \code{formulaRand}: \code{list(one=data.R.1,two=data.R.2,...).}}
   \item{Offset}{In case "Poisson" response is used specify the OFFSET variable, variable specifies factor \code{t} in the following: \code{log(mu/t)=eta.}}
   \item{BinomialDen}{In case "Binomial" response is used specify the number of trials for each observation.}
   \item{StartBeta}{Specify optional starting values for fixed effects in the mean structure (one vector of numeric values).}
@@ -82,11 +88,12 @@ Marek Molas \email{m.molas@erasmusmc.nl}.
 # Bernoulli model with crossed-random effects and estimated overdispersion #
 RSal<-data.frame(int=rep(1,60))
 
-modBin<-HGLMfit(DistResp="Binomial",DistRand=c("Normal","Normal"),Link="Logit",LapFix=TRUE,ODEst=FALSE,
-	       ODEstVal=c(0),formulaMain=Mate~TypeF+TypeM+TypeF*TypeM+(1|Female)+(1|Male), 
-               formulaOD=~1,formulaRand=list(one=~1,two=~1),
-               DataMain=salamander,DataRand=list(RSal,RSal),Offset=NULL,BinomialDen=rep(1,360),
-               INFO=TRUE,DEBUG=FALSE) 
+modBin<-HGLMfit(DistResp="Binomial",DistRand=c("Normal","Normal"),
+            Link="Logit",LapFix=TRUE,ODEst=FALSE, ODEstVal=c(0),
+            formulaMain=Mate~TypeF+TypeM+TypeF*TypeM+(1|Female)+(1|Male), 
+            formulaOD=~1,formulaRand=list(one=~1,two=~1),
+            DataMain=salamander,DataRand=list(RSal,RSal),
+            Offset=NULL,BinomialDen=rep(1,360),INFO=TRUE,DEBUG=FALSE) 
 modBin
 summary(modBin)
 
@@ -98,18 +105,23 @@ summary(modBin)
 cake$repbatch<-100*cake$Replicate+cake$Batch
 R1Cake<-data.frame(int=rep(1,15))
 R2Cake<-data.frame(int=rep(1,45))
-modCake1<-HGLMfit(DistResp="Normal",DistRand=c("Normal","Normal"),Link="Identity",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),
-            formulaMain=Angle~as.factor(Recipe)+as.factor(Temperature)+as.factor(Recipe)*as.factor(Temperature)+(1|Replicate)+(1|repbatch), 
-            ,formulaOD=~1,formulaRand=list(one=~1,two=~1),
-            DataMain=cake,DataRand=list(R1Cake,R2Cake),Offset=NULL,BinomialDen=rep(1,360),
+modCake1<-HGLMfit(DistResp="Normal",DistRand=c("Normal","Normal"),
+            Link="Identity",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),
+            formulaMain=Angle~as.factor(Recipe)+as.factor(Temperature)
+            +as.factor(Recipe)*as.factor(Temperature)+
+            (1|Replicate)+(1|repbatch),formulaOD=~1,
+            formulaRand=list(one=~1,two=~1),DataMain=cake,
+            DataRand=list(R1Cake,R2Cake),Offset=NULL,BinomialDen=rep(1,360),
             ,INFO=TRUE,DEBUG=FALSE)     
 modCake1
 summary(modCake1)
 HGLMLikeDeriv(modCake1)
-modCake2<-HGLMfit(DistResp="Normal",DistRand=c("Normal","Normal"),Link="Identity",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),
-            formulaMain=Angle~as.factor(Recipe)+as.factor(Temperature)+(1|Replicate)+(1|repbatch), 
-            ,formulaOD=~1,formulaRand=list(one=~1,two=~1),
-            DataMain=cake,DataRand=list(R1Cake,R2Cake),Offset=NULL,BinomialDen=rep(1,360),
+modCake2<-HGLMfit(DistResp="Normal",DistRand=c("Normal","Normal"),
+            Link="Identity",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),
+            formulaMain=Angle~as.factor(Recipe)+as.factor(Temperature)+
+            (1|Replicate)+(1|repbatch),formulaOD=~1,
+            formulaRand=list(one=~1,two=~1),DataMain=cake,
+            DataRand=list(R1Cake,R2Cake),Offset=NULL,BinomialDen=rep(1,360),
             ,INFO=TRUE,DEBUG=FALSE)  
 HGLMLikeDeriv(modCake2)
 HGLMLRTest(modCake2,modCake1)
@@ -118,30 +130,35 @@ HGLMLRTest(modCake2,modCake1)
 ######## Rat Data ########
 ##########################
 
-Rrat<-data.frame(WBC=tapply(rat$WhiteBloodCells,rat$Subject,mean),RBC=tapply(rat$RedBloodCells,rat$Subject,mean))
+Rrat<-data.frame(WBC=tapply(rat$WhiteBloodCells,rat$Subject,mean),
+            RBC=tapply(rat$RedBloodCells,rat$Subject,mean))
+            
 # Poisson-Normal Model #
-modRat1<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",LapFix=FALSE,ODEst=FALSE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+RedBloodCells+as.factor(Drug)+(1|Subject), 
-            ,formulaOD=~1,formulaRand=list(one=~1),
-            DataMain=rat,DataRand=list(Rrat),
+modRat1<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",
+            LapFix=FALSE,ODEst=FALSE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells
+            +RedBloodCells+as.factor(Drug)+(1|Subject),formulaOD=~1,
+            formulaRand=list(one=~1),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)  
 BootstrapEnvelopeHGLM(modRat1,9,9999)
 
 # Quasi-Poisson-Normal Model #
-modRat2<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+RedBloodCells+as.factor(Drug)+(1|Subject), 
-            ,formulaOD=~1,formulaRand=list(one=~WBC+I(WBC^2)),
-            DataMain=rat,DataRand=list(Rrat),
+modRat2<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",
+            LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+
+            RedBloodCells+as.factor(Drug)+(1|Subject),formulaOD=~1,
+            formulaRand=list(one=~WBC+I(WBC^2)),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)    
 # Gamma-Normal Model # 
-modRat3<-HGLMfit(DistResp="Gamma",DistRand=c("Normal"),Link="Log",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+RedBloodCells+as.factor(Drug)+(1|Subject), 
-            ,formulaOD=~1,formulaRand=list(one=~WBC+I(WBC^2)),
-            DataMain=rat,DataRand=list(Rrat),
+modRat3<-HGLMfit(DistResp="Gamma",DistRand=c("Normal"),Link="Log",
+            LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+
+            RedBloodCells+as.factor(Drug)+(1|Subject),formulaOD=~1,
+            formulaRand=list(one=~WBC+I(WBC^2)),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)                   
 # Normal-Normal Model #
-modRat4<-HGLMfit(DistResp="Normal",DistRand=c("Normal"),Link="Identity",LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+RedBloodCells+as.factor(Drug)+(1|Subject), 
-            ,formulaOD=~1,formulaRand=list(one=~WBC+I(WBC^2))
-            ,DataMain=rat,DataRand=list(Rrat),
+modRat4<-HGLMfit(DistResp="Normal",DistRand=c("Normal"),Link="Identity",
+            LapFix=FALSE,ODEst=TRUE,ODEstVal=c(0),formulaMain=Y~WhiteBloodCells+
+            RedBloodCells+as.factor(Drug)+(1|Subject),formulaOD=~1,
+            formulaRand=list(one=~WBC+I(WBC^2)),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)   
-
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
