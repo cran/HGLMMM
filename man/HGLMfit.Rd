@@ -64,6 +64,8 @@ Lee, Y. and Nelder, J.A. (2001). Hierarchical generalised linear models: A synth
 Lee, Y., Nelder, J.A., and Pawitan, Y. (2006). \emph{Generalized Linear Models with Random Effects}. Boca Raton: Chapman & Hall/CRC.
 
 Noh, M. and Lee, Y. (2007). REML estimation for binary data in GLMMs. \emph{Journal of Multivariate Analysis} \bold{98}, 896-915.
+
+Molas, M. and Lesaffre, E (2011). Hierarchical Generalized Linear Models: The R Package HGLMMM. \emph{Journal of Statistical Software} \bold{39}, 1-20.
 }
 
 \author{
@@ -85,7 +87,11 @@ Marek Molas \email{m.molas@erasmusmc.nl}.
 ######## Salamander Data ########
 #################################
 
+\dontrun{
+
 # Bernoulli model with crossed-random effects and estimated overdispersion #
+
+
 RSal<-data.frame(int=rep(1,60))
 
 modBin<-HGLMfit(DistResp="Binomial",DistRand=c("Normal","Normal"),
@@ -96,6 +102,7 @@ modBin<-HGLMfit(DistResp="Binomial",DistRand=c("Normal","Normal"),
             Offset=NULL,BinomialDen=rep(1,360),INFO=TRUE,DEBUG=FALSE) 
 modBin
 summary(modBin)
+
 
 ###########################
 ######## Cake Data ########
@@ -139,7 +146,10 @@ modRat1<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",
             +RedBloodCells+as.factor(Drug)+(1|Subject),formulaOD=~1,
             formulaRand=list(one=~1),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)  
+
+
 BootstrapEnvelopeHGLM(modRat1,9,9999)
+
 
 # Quasi-Poisson-Normal Model #
 modRat2<-HGLMfit(DistResp="Poisson",DistRand=c("Normal"),Link="Log",
@@ -160,7 +170,7 @@ modRat4<-HGLMfit(DistResp="Normal",DistRand=c("Normal"),Link="Identity",
             formulaRand=list(one=~WBC+I(WBC^2)),DataMain=rat,DataRand=list(Rrat),
             ,INFO=TRUE,DEBUG=FALSE)   
 }
-
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 

@@ -33,6 +33,7 @@ BootstrapEnvelopeHGLM(model, numBoot, seed)
 
 \author{
 Marek Molas \email{m.molas@erasmusmc.nl}.
+Emmanuel Lesaffre \email{e.lesaffre@erasmusmc.nl}
 }
 
 

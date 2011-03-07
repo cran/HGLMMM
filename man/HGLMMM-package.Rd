@@ -50,6 +50,7 @@ Lee, Y., Nelder, J.A., and Pawitan, Y. (2006). \emph{Generalized Linear Models w
 
 Noh, M. and Lee, Y. (2007). REML estimation for binary data in GLMMs. \emph{Journal of Multivariate Analysis} \bold{98}, 896-915.
 
+Molas, M. and Lesaffre, E (2011). Hierarchical Generalized Linear Models: The R Package HGLMMM. \emph{Journal of Statistical Software} \bold{39}, 1-20.
 }
 \keyword{ package }
 

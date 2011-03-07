@@ -1,0 +1,20 @@
+citHeader("To cite HGLMMM in publications use:")
+
+citEntry(entry = "Article",
+  title        = "Hierarchical Generalized Linear Models: The {R} Package {HGLMMM}",
+  author       = personList(as.person("Marek Molas"),
+                   as.person("Emmanuel Lesaffre")),
+  journal      = "Journal of Statistical Software",
+  year         = "2011",
+  volume       = "39",
+  number       = "13",
+  pages        = "1--20",
+  url          = "http://www.jstatsoft.org/v39/i13/",
+
+  textVersion  =
+  paste("Marek Molas, Emmanuel Lesaffre (2011).",
+        "Hierarchical Generalized Linear Models: The R Package HGLMMM.",
+        "Journal of Statistical Software, 39(13), 1-20.",
+        "URL http://www.jstatsoft.org/v39/i13/.")
+)
+
